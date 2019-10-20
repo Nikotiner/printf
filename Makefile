@@ -1,18 +1,36 @@
-C = *.c
-OBJECTS = *.o
-INCLUDES = ./includes
-NAME = libftprintf.a
+NAME = ft_printf
+
+SRC_DIR = ./src/
+OBJ_DIR = ./obj/
+INC_DIR = ./includes
+
+CC = gcc
+CC_FLAGS = -Wall -Wextra -Werror
+DEBUG_FLAGS = -g3
+
+SRC = ft_printf.c double_conversion.c handle_params.c handle_result.c handle_unsigned.c list_worker.c parsing.c string_worker.c utils.c validation.c
+
+OBJCTS = $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
 all: $(NAME)
 
-$(NAME):
-	gcc -Wextra -Wall -Werror -c $(C) -I $(INCLUDES)
-	ar rc $(NAME) $(OBJECTS)
+$(NAME): $(OBJCTS)
+	 ar rc $(NAME) $(OBJCTS) ./standart_c_lib/libft.a
+
+$(OBJCTS): | $(OBJ_DIR)
+
+$(OBJ_DIR):
+	mkdir $(OBJ_DIR)
+
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+	$(CC) $(CC_FLAGS) $(DEBUG_FLAGS) -c $< -o $@ -I$(INC_DIR)
 
 clean:
-	rm -f $(OBJECTS)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -rf $(NAME)
 
-re: fclean all
+re:	fclean all
+
+vpath %.c $(SRC_DIR)
